@@ -6,11 +6,13 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import { buildSchema, Resolver, Query } from 'type-graphql';
 import { connect } from 'mongoose';
 
+import authRoutes from './Routes/auth';
+
 const port = process.env.PORT || 9876;
 
 @Resolver()
 class Hello {
-  @Query()
+  @Query(() => String)
   hello(): string {
     return 'Hello world!';
   }
@@ -30,6 +32,8 @@ async function main() {
     const schema = await buildSchema({
       resolvers: [Hello]
     });
+
+    app.use('/auth', authRoutes);
 
     app.use(
       '/graphql',
