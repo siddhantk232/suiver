@@ -12,5 +12,5 @@ Steps to run this project:
 ## TODO
 
 - [x] google oauth
-- [ ] redis for sessions
+- [x] redis for sessions
 - [ ] CRUD for quiz (only authorized)
