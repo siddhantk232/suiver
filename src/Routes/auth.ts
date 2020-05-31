@@ -26,7 +26,6 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 const url = oauth2Client.generateAuthUrl({
-  // If you only need one scope you can pass it as a string
   scope: ['profile', 'email']
 });
 
@@ -36,7 +35,13 @@ router.get('/google', (_: Request, res: Response) => {
 
 router.get('/google/callback', async (req: Request, res: Response) => {
   try {
+    if (req.session!.userId) {
+      res.redirect(process.env.CLIENT_URL as string);
+    }
+
     const { code } = req.query;
+
+    if (code) throw new Error('Bad Request');
 
     const { tokens } = await oauth2Client.getToken(code as string);
 
@@ -51,9 +56,10 @@ router.get('/google/callback', async (req: Request, res: Response) => {
 
     const profile: IGProfile = await resp.json();
 
-    const user = User.findOne({ googleId: profile.id });
+    const user = await User.findOne({ googleId: profile.id });
 
     if (user) {
+      req.session!.userId = user.id;
       res.redirect(process.env.CLIENT_URL as string);
     } else {
       const newUser = User.create({
@@ -63,8 +69,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         googleId: profile.id
       });
 
-      (await newUser).save();
-
+      req.session!.userId = (await newUser).id;
       res.redirect(process.env.CLIENT_URL as string);
     }
   } catch (error) {

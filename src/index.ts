@@ -1,10 +1,16 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import * as express from 'express';
-import * as graphqlHTTP from 'express-graphql';
+import express from 'express';
+import graphqlHTTP from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { buildSchema, Resolver, Query } from 'type-graphql';
 import { connect } from 'mongoose';
+import session from 'express-session';
+import Redis from 'ioredis';
+import connectRedis from 'connect-redis';
+
+const redisClient = new Redis();
+const redisStore = connectRedis(session);
 
 import authRoutes from './Routes/auth';
 
@@ -21,6 +27,23 @@ class Hello {
 async function main() {
   try {
     const app = express();
+
+    app.use(
+      session({
+        secret: process.env.SESSION_SECRET as string,
+        name: 'sid',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+          secure: process.env.NODE_ENV === 'production',
+          maxAge: 1000 * 60 * 60 * 24 * 7,
+          httpOnly: true
+        },
+        store: new redisStore({
+          client: redisClient
+        })
+      })
+    );
 
     await connect(process.env.MONGO_URI as string, {
       useUnifiedTopology: true,
