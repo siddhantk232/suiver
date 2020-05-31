@@ -6,3 +6,13 @@ Steps to run this project:
 2. Setup database settings inside `ormconfig.json` file
 3. Run `yarn start` command
 4. Go to `localhost:4000/playground` for graphql playground
+
+---
+
+## TODO
+
+[x] google oauth
+
+[ ] redis for sessions
+
+[ ] CRUD for quiz (only authorized)
