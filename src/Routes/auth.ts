@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import { Router, Request, Response } from 'express';
 import { google } from 'googleapis';
 import fetch from 'node-fetch';
