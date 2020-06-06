@@ -2,10 +2,11 @@
 
 Steps to run this project:
 
-1. Run `yarn` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `yarn start` command
-4. Go to `localhost:4000/playground` for graphql playground
+1. Run `yarn` or `npm install` command to install dependencies
+2. rename `.env.example` to `.env` and add values
+3. Run `yarn start` or `npm start` command
+4. Go to `/playground` for graphql playground
+5. The graphql server is on `/graphql`
 
 ---
 
