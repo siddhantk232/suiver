@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import 'dotenv/config';
-import express from 'express';
-import graphqlHTTP from 'express-graphql';
+import * as express from 'express';
+import * as graphqlHTTP from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { buildSchema, Resolver, Query } from 'type-graphql';
 import { connect } from 'mongoose';
-import session from 'express-session';
-import Redis from 'ioredis';
-import connectRedis from 'connect-redis';
+import * as session from 'express-session';
+import * as Redis from 'ioredis';
+import * as connectRedis from 'connect-redis';
 
 const redisClient = new Redis();
 const redisStore = connectRedis(session);

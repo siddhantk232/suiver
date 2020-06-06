@@ -13,6 +13,9 @@ export class UserSchema {
 
   @prop()
   public googleId?: string;
+
+  @prop()
+  public githubId?: number;
 }
 
 const User = getModelForClass(UserSchema);
