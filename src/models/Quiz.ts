@@ -1,47 +1,38 @@
-/* eslint-disable no-unused-vars */
 import {
+  getModelForClass,
   modelOptions,
   prop,
-  Ref,
-  getModelForClass
+  Ref
 } from '@typegoose/typegoose';
+import { Field, ObjectType, ID, Int } from 'type-graphql';
 
 import User, { UserSchema } from './User';
-
-export enum QuestionType {
-  MULTIPLECHOICE = 'MULTIPLECHOICE',
-  PLAIN = 'PLAIN',
-  ONEWORD = 'ONEWORD',
-  TRUEFALSE = 'TRUEFALSE'
-}
-
-export interface IOption {
-  title: string;
-  isCorrect?: Boolean;
-}
-
-export interface IQuestion {
-  question: string;
-  type: QuestionType;
-  options?: IOption[];
-  answer?: String;
-}
+import { QuestionSchema } from './Question';
 
 @modelOptions({ schemaOptions: { collection: 'quizzes', timestamps: true } })
-class QuizSchema {
+@ObjectType()
+export class QuizSchema {
+  @Field(() => ID)
+  id: string;
+
   @prop()
+  @Field()
   name: string;
 
   @prop()
-  questions: IQuestion;
+  @Field(() => [QuestionSchema], { nullable: true })
+  questions?: Ref<QuestionSchema>[];
 
   @prop({ ref: User }) // 1:1
-  public createdBy: Ref<UserSchema>;
+  @Field(() => UserSchema, { nullable: true })
+  public createdBy?: Ref<UserSchema>;
 
-  @prop()
+  @prop({ default: 0 })
+  @Field(() => Int)
   clicks?: number;
 
-  @prop()
+  @prop({ default: 0 })
+  @Field(() => Int)
   attempt?: number;
 }
 

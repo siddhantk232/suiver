@@ -9,10 +9,11 @@ import * as session from 'express-session';
 import * as Redis from 'ioredis';
 import * as connectRedis from 'connect-redis';
 
+import authRoutes from './Routes/auth';
+import { QuizResolver } from './modules/Quiz';
+
 const redisClient = new Redis();
 const redisStore = connectRedis(session);
-
-import authRoutes from './Routes/auth';
 
 const port = process.env.PORT || 9876;
 
@@ -53,7 +54,7 @@ async function main() {
     console.log('\x1b[32m%s\x1b[0m', '[ mongoDB ] connected ✔');
 
     const schema = await buildSchema({
-      resolvers: [Hello]
+      resolvers: [Hello, QuizResolver]
     });
 
     app.use('/auth', authRoutes);
