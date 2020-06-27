@@ -7,7 +7,36 @@ import { OptionInput } from './graphqlTypes/InputTypes';
 export class QuizResolver {
   @Query(() => QuizSchema)
   async getQuiz(@Arg('id') id: String) {
-    return Quiz.findById(id).populate('createdBy');
+    try {
+      return Quiz.findById(id).populate('createdBy');
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  @Query(() => [QuestionSchema])
+  async getQuestions(@Arg('quizId') quizId: string) {
+    try {
+      const questions = await Question.find({ quizId });
+
+      return questions.map((question) => {
+        return {
+          id: question.id,
+          type: question.type,
+          question: question.question,
+          answer: question.answer,
+          quizId: question.quizId,
+          options: question.options?.reduce(
+            (acc, val) => acc.concat(val as any),
+            []
+          )
+        };
+      });
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   @Mutation(() => QuizSchema)
