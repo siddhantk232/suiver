@@ -91,4 +91,10 @@ export class QuizResolver {
     const ok = await Quiz.deleteOne({ _id: id });
     return !!ok.deletedCount;
   }
+
+  @Mutation(() => Boolean)
+  async deleteQuestion(@Arg('id') id: string) {
+    const ok = await Question.deleteOne({ _id: id });
+    return !!ok.deletedCount;
+  }
 }
