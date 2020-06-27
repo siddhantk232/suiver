@@ -16,4 +16,4 @@ Steps to run this project:
 - [x] redis for sessions
 - [x] github oauth
 - [x] CRUD for quiz
-- [ ] protected mutations
+- [x] protected mutations
