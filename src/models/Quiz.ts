@@ -6,8 +6,7 @@ import {
 } from '@typegoose/typegoose';
 import { Field, ObjectType, ID, Int } from 'type-graphql';
 
-import User, { UserSchema } from './User';
-import { QuestionSchema } from './Question';
+import { UserSchema } from './User';
 
 @modelOptions({ schemaOptions: { collection: 'quizzes', timestamps: true } })
 @ObjectType()
@@ -19,11 +18,7 @@ export class QuizSchema {
   @Field()
   name: string;
 
-  @prop()
-  @Field(() => [QuestionSchema], { nullable: true })
-  questions?: Ref<QuestionSchema>[];
-
-  @prop({ ref: User }) // 1:1
+  @prop({ ref: () => UserSchema }) // 1:1
   @Field(() => UserSchema, { nullable: true })
   public createdBy?: Ref<UserSchema>;
 

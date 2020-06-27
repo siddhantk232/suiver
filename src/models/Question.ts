@@ -1,6 +1,6 @@
 import { modelOptions, prop, getModelForClass } from '@typegoose/typegoose';
 
-import { registerEnumType, ObjectType, Field } from 'type-graphql';
+import { registerEnumType, ObjectType, Field, ID } from 'type-graphql';
 
 export enum QuestionType {
   MULTIPLECHOICE = 'MULTIPLECHOICE',
@@ -22,12 +22,16 @@ export class IOption {
   isCorrect?: Boolean;
 }
 
-@ObjectType()
-export class IQuestion {}
-
 @modelOptions({ schemaOptions: { collection: 'questions', timestamps: true } })
 @ObjectType()
 export class QuestionSchema {
+  @Field(() => ID)
+  id: string;
+
+  @Field()
+  @prop()
+  quizId: string;
+
   @Field()
   @prop()
   question: string;
@@ -37,8 +41,8 @@ export class QuestionSchema {
   type: QuestionType;
 
   @prop()
-  @Field(() => IOption, { nullable: true })
-  options?: IOption[];
+  @Field(() => [IOption], { nullable: true })
+  options?: Array<IOption>;
 
   @Field(() => String, { nullable: true })
   answer?: String;
