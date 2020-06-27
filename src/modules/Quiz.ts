@@ -1,11 +1,22 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  Arg,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+  Ctx
+} from 'type-graphql';
 import Question, { QuestionSchema, QuestionType } from '../models/Question';
 import Quiz, { QuizSchema } from '../models/Quiz';
 import { OptionInput } from './graphqlTypes/InputTypes';
+import { isAuth } from './middlewares/isAuth';
+import { Request } from 'express';
+import { CreateQuizOutput } from './graphqlTypes/ObjectTypes';
 
 @Resolver(() => QuizSchema)
 export class QuizResolver {
   @Query(() => QuizSchema)
+  @UseMiddleware(isAuth)
   async getQuiz(@Arg('id') id: String) {
     try {
       return Quiz.findById(id).populate('createdBy');
@@ -16,6 +27,7 @@ export class QuizResolver {
   }
 
   @Query(() => [QuestionSchema])
+  @UseMiddleware(isAuth)
   async getQuestions(@Arg('quizId') quizId: string) {
     try {
       const questions = await Question.find({ quizId });
@@ -39,13 +51,14 @@ export class QuizResolver {
     }
   }
 
-  @Mutation(() => QuizSchema)
+  @Mutation(() => CreateQuizOutput)
+  @UseMiddleware(isAuth)
   async createQuiz(
     @Arg('name') name: string,
-    @Arg('createdBy') createdBy: String
+    @Ctx() context: Request
   ): Promise<QuizSchema> {
     try {
-      return await Quiz.create({ name, createdBy: createdBy as any });
+      return await Quiz.create({ name, createdBy: context.session!.userId });
     } catch (error) {
       console.log(error);
       return error;
@@ -53,6 +66,7 @@ export class QuizResolver {
   }
 
   @Mutation(() => QuestionSchema)
+  @UseMiddleware(isAuth)
   async createQuestion(
     @Arg('question') question: string,
     @Arg('type', () => QuestionType) type: QuestionType,
@@ -87,12 +101,14 @@ export class QuizResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteQuiz(@Arg('id') id: string) {
     const ok = await Quiz.deleteOne({ _id: id });
     return !!ok.deletedCount;
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async deleteQuestion(@Arg('id') id: string) {
     const ok = await Question.deleteOne({ _id: id });
     return !!ok.deletedCount;
