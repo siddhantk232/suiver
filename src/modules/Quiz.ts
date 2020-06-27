@@ -85,4 +85,10 @@ export class QuizResolver {
       return error;
     }
   }
+
+  @Mutation(() => Boolean)
+  async deleteQuiz(@Arg('id') id: string) {
+    const ok = await Quiz.deleteOne({ _id: id });
+    return !!ok.deletedCount;
+  }
 }
