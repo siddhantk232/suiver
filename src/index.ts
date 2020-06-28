@@ -8,6 +8,7 @@ import { connect } from 'mongoose';
 import * as session from 'express-session';
 import * as Redis from 'ioredis';
 import * as connectRedis from 'connect-redis';
+import * as cors from 'cors';
 
 import authRoutes from './Routes/auth';
 import { QuizResolver } from './modules/Quiz';
@@ -28,6 +29,8 @@ class Hello {
 async function main() {
   try {
     const app = express();
+
+    app.use(cors({origin: process.env.CLIENT_URL}))
 
     app.use(
       session({
