@@ -12,6 +12,7 @@ import * as cors from 'cors';
 
 import authRoutes from './Routes/auth';
 import { QuizResolver } from './modules/Quiz';
+import { AuthResolver } from './modules/Auth';
 
 const redisClient = new Redis();
 const redisStore = connectRedis(session);
@@ -57,7 +58,7 @@ async function main() {
     console.log('\x1b[32m%s\x1b[0m', '[ mongoDB ] connected ✔');
 
     const schema = await buildSchema({
-      resolvers: [Hello, QuizResolver]
+      resolvers: [Hello, QuizResolver, AuthResolver]
     });
 
     app.use('/auth', authRoutes);
