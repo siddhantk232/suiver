@@ -29,7 +29,7 @@
     "graphql-playground-middleware-express": "^1.7.14",
     "ioredis": "^4.17.3",
     "mongoose": "^5.9.16",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.7",
     "reflect-metadata": "^0.1.10",
     "type-graphql": "^1.0.0-rc.2"
   },
